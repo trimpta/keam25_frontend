@@ -304,7 +304,7 @@
             const maths = parseInt(formData.get('maths')) || 0;
 
             // Send data to server and process response
-            fetch('http://127.0.0.1:5000/calculate', {
+            fetch('https://nerdrip.pythonanywhere.com/calculate', {
                 method: 'POST',
                 body: formData
             })
