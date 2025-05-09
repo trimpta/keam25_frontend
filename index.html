@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEAM Mark Calculator</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        .container {
+            max-width: 768px;
+        }
+
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        .gradient-bg {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #4B5563;
+        }
+
+        .form-input {
+            border-radius: 8px;
+            border: 1px solid #D1D5DB;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: #6366F1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+            outline: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.4);
+        }
+
+        .radio-container {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 16px;
+        }
+
+        .radio-container input[type="radio"] {
+            margin-right: 6px;
+        }
+
+        .divider {
+            margin: 16px 0;
+            height: 1px;
+            background-color: #E5E7EB;
+        }
+
+        .result-card {
+            display: none;
+        }
+
+        .pharma-options {
+            margin-left: 16px;
+            color: #4B5563;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container mx-auto px-4 py-8">
+        <div class="card bg-white p-6 mb-6">
+            <div class="gradient-bg text-white p-4 rounded-lg mb-6">
+                <h1 class="text-2xl font-bold text-center">KEAM Mark Calculator</h1>
+                <p class="text-center text-sm opacity-90 mt-1">Calculate your expected rank accurately</p>
+            </div>
+
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <h3 class="font-semibold text-blue-800 mb-2">Instructions</h3>
+                <p class="text-sm mb-2">Enter your response sheet exactly as given to you. The system will process it
+                    and calculate your expected KEAM score.</p>
+                <ul class="text-xs mt-2 text-blue-700 list-disc pl-5">
+                    <li>Fill in all required fields</li>
+                    <li>Enter your 12th Physics, Chemistry, and Mathematics marks</li>
+                    <li>Make sure to select the correct exam date and board</li>
+                </ul>
+            </div>
+
+            <form id="keamForm" action="http://127.0.0.1:5000/calculate" method="post">
+                <!-- Board Selection -->
+                <div class="mb-4">
+                    <label class="form-label block mb-2">Select Your Board:</label>
+                    <div class="flex flex-wrap">
+                        <div class="radio-container">
+                            <input type="radio" id="cbse" name="board" value="cbse" checked>
+                            <label for="cbse">CBSE</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="icse" name="board" value="icse">
+                            <label for="icse">ICSE</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="state" name="board" value="state">
+                            <label for="state">State</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exam Date Selection -->
+                <div class="mb-4">
+                    <label class="form-label block mb-2">Select Exam Date:</label>
+                    <div class="flex flex-wrap mb-2">
+                        <div class="radio-container">
+                            <input type="radio" id="23" name="examDate" value="23" checked>
+                            <label for="23">23rd</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="24FN" name="examDate" value="24FN">
+                            <label for="24FN">24th FN</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="24AN" name="examDate" value="24AN">
+                            <label for="24AN">24th AN</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="25" name="examDate" value="25">
+                            <label for="25">25th</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="26" name="examDate" value="26">
+                            <label for="26">26th</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="27" name="examDate" value="27">
+                            <label for="27">27th</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="28" name="examDate" value="28">
+                            <label for="28">28th</label>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-wrap pharma-options">
+                        <p class="w-full text-xs mb-1">B.Pharm Options:</p>
+                        <div class="radio-container">
+                            <input type="radio" id="29FN" name="examDate" value="29FN">
+                            <label for="29FN">29th FN</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="29AN" name="examDate" value="29AN">
+                            <label for="29AN">29th AN</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Response Sheet -->
+                <div class="mb-4">
+                    <label for="responseSheet" class="form-label block mb-2">Response Sheet:</label>
+                    <textarea id="responseSheet" name="resp" rows="6" class="form-input w-full p-2"
+                        placeholder="Paste your response sheet here..."></textarea>
+                </div>
+
+                <!-- 12th Marks -->
+                <div class="mb-6">
+                    <label class="form-label block mb-2">12th Marks:</label>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div>
+                            <label for="physics" class="block text-sm">Physics:</label>
+                            <input type="number" id="physics" name="phy" class="form-input w-full p-2" min="0" max="100"
+                                required>
+                        </div>
+                        <div>
+                            <label for="chemistry" class="block text-sm">Chemistry:</label>
+                            <input type="number" id="chemistry" name="chem" class="form-input w-full p-2" min="0"
+                                max="100" required>
+                        </div>
+                        <div>
+                            <label for="maths" class="block text-sm">Mathematics:</label>
+                            <input type="number" id="maths" name="math" class="form-input w-full p-2" min="0" max="100"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="mt-3 p-3 bg-gray-50 rounded-lg">
+                        <p class="text-sm">Total PCM: <span id="pcmTotal">0</span> / <span id="pcmMax">300</span></p>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <button type="submit" class="btn-primary text-white py-3 px-6">
+                        Calculate KEAM Score
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Result Card (Initially Hidden) -->
+        <div id="resultCard" class="card bg-white p-6 result-card">
+            <h2 class="text-xl font-bold mb-4 text-center">Your KEAM Score</h2>
+
+            <div class="divider"></div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Total Score</h3>
+                    <p class="text-3xl font-bold text-indigo-600" id="totalScore">0</p>
+                </div>
+
+                <div class="bg-gray-50 p-4 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-2">Answer Statistics</h3>
+                    <ul class="space-y-2">
+                        <li>Correct Answers: <span id="correctAnswers" class="font-medium">0</span></li>
+                        <li>Wrong Answers: <span id="wrongAnswers" class="font-medium">0</span></li>
+                        <li>Not Attempted: <span id="notAttempted" class="font-medium">0</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="mt-6 text-sm text-gray-500">
+                <p>Any data entered in this site may be stored securely and used for the KEAM rank calculator, but won't
+                    be shared with any third parties.</p>
+            </div>
+        </div>
+
+        <footer class="mt-8 text-center text-gray-500 text-sm">
+            Made with ❤️ by <a href="https://shreevardhan.net"
+                class="text-indigo-600 hover:underline">shreevardhan.net</a>
+        </footer>
+    </div>
+
+    <script>
+        // Variable lengths for each exam date
+        const var_lens = {
+            '23': 147,
+            '24FN': 75,
+            '24AN': 75,
+            '25': 147,
+            '26': 149,
+            '27': 145,
+            '28': 145,
+            '29FN': 74,
+            '29AN': 144
+        };
+
+        // Handle board selection to update max marks
+        const boardRadios = document.querySelectorAll('input[name="board"]');
+        const marksInputs = document.querySelectorAll('#physics, #chemistry, #maths');
+        const pcmMaxSpan = document.getElementById('pcmMax');
+
+        boardRadios.forEach(radio => {
+            radio.addEventListener('change', updateMaxMarks);
+        });
+
+        function updateMaxMarks() {
+            const selectedBoard = document.querySelector('input[name="board"]:checked').value;
+            const maxMarks = (selectedBoard === 'state') ? 120 : 100;
+
+            marksInputs.forEach(input => {
+                input.max = maxMarks;
+            });
+
+            pcmMaxSpan.textContent = maxMarks * 3;
+            calculatePCMTotal();
+        }
+
+        // Calculate PCM total
+        marksInputs.forEach(input => {
+            input.addEventListener('input', calculatePCMTotal);
+        });
+
+        function calculatePCMTotal() {
+            const physics = parseInt(document.getElementById('physics').value) || 0;
+            const chemistry = parseInt(document.getElementById('chemistry').value) || 0;
+            const maths = parseInt(document.getElementById('maths').value) || 0;
+
+            const total = physics + chemistry + maths;
+            document.getElementById('pcmTotal').textContent = total;
+        }
+
+        // Form submission
+        document.getElementById('keamForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const examDate = formData.get('examDate');
+            const physics = parseInt(formData.get('physics')) || 0;
+            const chemistry = parseInt(formData.get('chemistry')) || 0;
+            const maths = parseInt(formData.get('maths')) || 0;
+
+            // Send data to server and process response
+            fetch('http://127.0.0.1:5000/calculate', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Process server response
+                    const responses = data.responses || [];
+
+                    let student = {
+                        correct: 0,
+                        wrong: 0,
+                        phy: physics,
+                        chem: chemistry,
+                        math: maths,
+                        responses: responses,
+                        varlen: var_lens[examDate]
+                    };
+
+                    // Calculate scores
+                    const pcm = student.phy + student.chem + student.math;
+
+                    for (let i = 0; i < student.responses.length; i++) {
+                        const [ans, student_ans] = student.responses[i];
+                        if (student_ans === "N") {
+                            continue;
+                        }
+                        if (ans === student_ans) {
+                            student.correct += 1;
+                        } else {
+                            student.wrong += 1;
+                        }
+                    }
+
+                    student.score = (((student.correct * 4) - student.wrong) / (student.varlen * 4)) * 300 + pcm;
+
+                    // Display results
+                    document.getElementById('totalScore').textContent = student.score.toFixed(2);
+                    document.getElementById('correctAnswers').textContent = student.correct;
+                    document.getElementById('wrongAnswers').textContent = student.wrong;
+                    document.getElementById('notAttempted').textContent = student.varlen - (student.correct + student.wrong);
+
+                    document.getElementById('resultCard').style.display = 'block';
+
+                    // Scroll to results
+                    document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
+                })
+                .catch(error => {
+                    alert('Error processing your submission: ' + error.message);
+                    console.error('Error:', error);
+                });
+        });
+
+        // Initialize max marks on page load
+        updateMaxMarks();
+    </script>
+</body>
+
+</html>
