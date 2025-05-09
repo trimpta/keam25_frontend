@@ -298,9 +298,6 @@
 
             const formData = new FormData(this);
             const examDate = formData.get('examDate');
-            const physics = parseInt(formData.get('physics')) || 0;
-            const chemistry = parseInt(formData.get('chemistry')) || 0;
-            const maths = parseInt(formData.get('maths')) || 0;
 
             // Send data to server and process response
             fetch('https://nerdrip.pythonanywhere.com/calculate', {
@@ -317,6 +314,10 @@
                     // Process server response
                     const responses = data.responses || [];
 
+                    const physics = parseInt(document.getElementById('physics').value) || 0;
+                    const chemistry = parseInt(document.getElementById('chemistry').value) || 0;
+                    const maths = parseInt(document.getElementById('maths').value) || 0;
+
                     let student = {
                         correct: 0,
                         wrong: 0,
@@ -328,7 +329,10 @@
                     };
 
                     // Calculate scores
-                    const pcm = student.phy + student.chem + student.math;
+
+
+                            
+                    const pcm = physics + chemistry + maths;
 
                     for (let i = 0; i < student.responses.length; i++) {
                         const [ans, student_ans] = student.responses[i];
