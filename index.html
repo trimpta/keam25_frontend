@@ -83,6 +83,91 @@
             margin-left: 16px;
             color: #4B5563;
         }
+
+        /* Answer comparison styles */
+        .answer-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 768px) {
+            .answer-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        .answer-item {
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .answer-correct {
+            background-color: #D1FAE5;
+            border: 1px solid #10B981;
+        }
+
+        .answer-wrong {
+            background-color: #FEE2E2;
+            border: 1px solid #EF4444;
+        }
+
+        .answer-not-attempted {
+            background-color: #F3F4F6;
+            border: 1px solid #D1D5DB;
+        }
+
+        .answer-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            line-height: 18px;
+            text-align: center;
+            border-radius: 50%;
+            margin-right: 4px;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .answer-correct .answer-icon {
+            background-color: #10B981;
+            color: white;
+        }
+
+        .answer-wrong .answer-icon {
+            background-color: #EF4444;
+            color: white;
+        }
+
+        .answer-not-attempted .answer-icon {
+            background-color: #9CA3AF;
+            color: white;
+        }
+
+        .response-section {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 10px;
+        }
+
+        .response-tabs {
+            display: flex;
+            border-bottom: 1px solid #E5E7EB;
+            margin-bottom: 16px;
+        }
+
+        .response-tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+        }
+
+        .response-tab.active {
+            border-bottom: 2px solid #6366F1;
+            color: #6366F1;
+            font-weight: 600;
+        }
     </style>
 </head>
 
@@ -112,7 +197,7 @@
                             On <strong>Android</strong>: Tap and hold on any word, then choose <strong>Select
                                 All</strong> from the
                             popup. Once
-                            everything’s highlighted, tap Copy.
+                            everything's highlighted, tap Copy.
                         </p>
                     </li>
                     <br>
@@ -235,6 +320,24 @@
                 </div>
             </div>
 
+            <!-- Detailed Response Section -->
+            <div class="mt-6">
+                <h3 class="font-semibold text-lg mb-3">Question-wise Responses</h3>
+
+                <div class="response-tabs">
+                    <div class="response-tab active" id="tab-all">All Questions</div>
+                    <div class="response-tab" id="tab-correct">Correct</div>
+                    <div class="response-tab" id="tab-wrong">Wrong</div>
+                    <div class="response-tab" id="tab-not-attempted">Not Attempted</div>
+                </div>
+
+                <div class="response-section">
+                    <div class="answer-grid" id="detailedResponses">
+                        <!-- Response items will be dynamically added here -->
+                    </div>
+                </div>
+            </div>
+
             <div class="mt-6 text-sm text-gray-500">
                 <p>Any data entered in this site may be stored securely and used for the KEAM rank calculator, but won't
                     be shared with any third parties.</p>
@@ -261,6 +364,19 @@
             '29AN': 144
         };
 
+        // Cancelled questions for each exam date
+        const answer_keys = {
+            "23": [31, 77, 111],
+            "24FN": [],
+            "24AN": [],
+            "25": [87, 100, 150],
+            "26": [84],
+            "27": [11, 29, 42, 55, 89],
+            "28": [65, 99, 131, 140, 127],
+            "29FN": [11],
+            "29AN": [2, 39, 41, 74, 108, 117]
+        };
+
         // Form submission
         document.getElementById('keamForm').addEventListener('submit', function (e) {
             e.preventDefault();
@@ -271,8 +387,6 @@
             formData.append("phy", "-1")
             formData.append("chem", "-1")
             formData.append("math", "-1")
-
-
 
             const examDate = formData.get('examDate');
 
@@ -299,10 +413,6 @@
                     };
 
                     // Calculate scores
-
-
-
-
                     for (let i = 0; i < student.responses.length; i++) {
                         const [ans, student_ans] = student.responses[i];
                         if (student_ans === "N") {
@@ -323,6 +433,9 @@
                     document.getElementById('wrongAnswers').textContent = student.wrong;
                     document.getElementById('notAttempted').textContent = student.varlen - (student.correct + student.wrong);
 
+                    // Display detailed responses
+                    displayDetailedResponses(student.responses, examDate);
+
                     document.getElementById('resultCard').style.display = 'block';
 
                     // Scroll to results
@@ -334,8 +447,91 @@
                 });
         });
 
-        // Initialize max marks on page load
-        updateMaxMarks();
+        // Function to display detailed responses
+        function displayDetailedResponses(responses, examDate) {
+            const container = document.getElementById('detailedResponses');
+            container.innerHTML = '';
+
+            const cancelledQuestions = answer_keys[examDate] || [];
+
+            responses.forEach((response, index) => {
+                // Skip if the question is cancelled
+                if (cancelledQuestions.includes(index + 1)) {
+                    return;
+                }
+
+                const questionNumber = index + 1;
+                const correctAnswer = response[0];
+                const userAnswer = response[1];
+
+                let itemClass, icon, status, answerText;
+
+                if (userAnswer === "N") {
+                    itemClass = "answer-not-attempted";
+                    icon = "N/A";
+                    status = "Not attempted";
+                    answerText = `Correct: ${correctAnswer}`;
+                } else if (correctAnswer === userAnswer) {
+                    itemClass = "answer-correct";
+                    icon = "✓";
+                    status = "Correct answer";
+                    answerText = correctAnswer;
+                } else {
+                    itemClass = "answer-wrong";
+                    icon = "✗";
+                    status = "Wrong answer";
+                    answerText = `You: ${userAnswer}, Correct: ${correctAnswer}`;
+                }
+
+                const itemElement = document.createElement('div');
+                itemElement.className = `answer-item ${itemClass}`;
+                itemElement.dataset.status = status.toLowerCase().replace(' ', '-');
+
+                itemElement.innerHTML = `
+                    <div><strong>Q${questionNumber}:</strong> ${status}</div>
+                    <div class="mt-1">${answerText}</div>
+                    <span class="answer-icon">${icon}</span>
+                `;
+
+                container.appendChild(itemElement);
+            });
+
+            // Initialize filter tabs
+            initFilterTabs();
+        }
+
+        // Function to initialize filter tabs
+        function initFilterTabs() {
+            const tabs = document.querySelectorAll('.response-tab');
+            const responseItems = document.querySelectorAll('.answer-item');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    // Remove active class from all tabs
+                    tabs.forEach(t => t.classList.remove('active'));
+
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+
+                    const tabId = this.id.split('-')[1];
+
+                    // Show/hide items based on tab
+                    responseItems.forEach(item => {
+                        if (tabId === 'all') {
+                            item.style.display = 'block';
+                        } else if (tabId === 'correct' && item.classList.contains('answer-correct')) {
+                            item.style.display = 'block';
+                        } else if (tabId === 'wrong' && item.classList.contains('answer-wrong')) {
+                            item.style.display = 'block';
+                        } else if (tabId === 'not-attempted' && item.classList.contains('answer-not-attempted')) {
+                            item.style.display = 'block';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            });
+        }
     </script>
 </body>
 
