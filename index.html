@@ -468,7 +468,7 @@
 
                 if (userAnswer === "N") {
                     itemClass = "answer-not-attempted";
-                    icon = "N/A";
+                    icon = "-";
                     status = "Not attempted";
                     answerText = `Correct: ${correctAnswer}`;
                 } else if (correctAnswer === userAnswer) {
@@ -488,7 +488,7 @@
                 itemElement.dataset.status = status.toLowerCase().replace(' ', '-');
 
                 itemElement.innerHTML = `
-                    <div><strong>Q${questionNumber}:</strong> ${status}</div>
+                    <div><strong>${questionNumber}:</strong> ${status}</div>
                     <div class="mt-1">${answerText}</div>
                     <span class="answer-icon">${icon}</span>
                 `;
