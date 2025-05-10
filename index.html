@@ -335,7 +335,7 @@
             </div>
 
             <!-- Detailed Response Section -->
-            <div class="mt-6 hidden">
+            <div class="mt-6">
                 <h3 class="font-semibold text-lg mb-3">Question-wise Responses</h3>
 
                 <div class="response-tabs">
@@ -352,10 +352,10 @@
                 </div>
             </div>
 
-            <div class="mt-6 text-sm text-gray-500">
-                <p>Any data entered in this site may be stored securely and used for the KEAM rank calculator, but won't
-                    be shared with any third parties.</p>
-            </div>
+        </div>
+        <div class="mt-6 text-sm text-gray-500">
+            <p>Any data entered in this site may be stored securely and used for the KEAM rank calculator, but won't
+                be shared with any third parties.</p>
         </div>
 
         <footer class="mt-8 text-center text-gray-500 text-sm">
@@ -462,19 +462,22 @@
         });
 
         // Function to display detailed responses
-function displayDetailedResponses(responses, examDate) {
+        function displayDetailedResponses(responses, examDate) {
             const container = document.getElementById('detailedResponses');
             container.innerHTML = '';
 
             const cancelledQuestions = answer_keys[examDate] || [];
 
+            let question_offset = 0;
+
             responses.forEach((response, index) => {
+
                 // Skip if the question is cancelled
                 if (cancelledQuestions.includes(index + 1)) {
-                    return;
+                    question_offset++;
                 }
+                const questionNumber = index + question_offset + 1;
 
-                const questionNumber = index + 1;
                 const correctAnswer = response[0];
                 const userAnswer = response[1];
 
@@ -513,8 +516,8 @@ function displayDetailedResponses(responses, examDate) {
             // Initialize filter tabs
             initFilterTabs();
         }
-    
-        
+
+
         // Function to initialize filter tabs
         function initFilterTabs() {
             const tabs = document.querySelectorAll('.response-tab');
