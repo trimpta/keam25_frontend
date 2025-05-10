@@ -13,6 +13,10 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
         }
 
+        .hidden {
+            display: none;
+        }
+
         .container {
             max-width: 768px;
         }
@@ -92,33 +96,40 @@
 
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                 <h3 class="font-semibold text-blue-800 mb-2">Instructions</h3>
-                <p class="text-sm mb-2">Copy your response sheet from <a href=''>keam website</a>, and paste it in the form.</p>
+                <p class="text-sm mb-2">Copy your response sheet from keam website, and paste it in the
+                    form.</p>
                 <ul class="text-xs mt-2 text-blue-700 list-disc pl-5">
-                    <li>Fill in all required fields</li>
-                    <li>Enter your 12th Physics, Chemistry, and Mathematics marks</li>
-                    <li>Make sure to select the correct exam date and board</li>
+                    <li>Go to the official KEAM 2025 website and log into your account.</li>
+                    <li>Find and open the Response Sheet section.</li>
+                    <br>
+                    <li>
+                        <p>Copy all the text from your response sheet:
+                            <br>
+                            On <strong>Desktop</strong>: Press <strong>Ctrl + A</strong> to select all, then
+                            <strong>Ctrl + C</strong> to
+                            copy.
+                            <br>
+                            On <strong>Android</strong>: Tap and hold on any word, then choose <strong>Select
+                                All</strong> from the
+                            popup. Once
+                            everything’s highlighted, tap Copy.
+                        </p>
+                    </li>
+                    <br>
+                    <li>Paste the copied text into the <strong>Response Sheet</strong> box below on this site.</li>
+                    <li>Choose your Exam Date</li>
+                    <br>
+                    <li>Hit Calculate!</li>
                 </ul>
             </div>
 
-            <form id="keamForm" action="https://nerdrip.pythonanywhere.com/calculate" method="post">
-                <!-- Board Selection -->
-                <div class="mb-4">
-                    <label class="form-label block mb-2">Select Your Board:</label>
-                    <div class="flex flex-wrap">
-                        <div class="radio-container">
-                            <input type="radio" id="cbse" name="board" value="cbse" checked>
-                            <label for="cbse">CBSE</label>
-                        </div>
-                        <div class="radio-container">
-                            <input type="radio" id="icse" name="board" value="icse">
-                            <label for="icse">ICSE</label>
-                        </div>
-                        <div class="radio-container">
-                            <input type="radio" id="state" name="board" value="state">
-                            <label for="state">State</label>
-                        </div>
-                    </div>
-                </div>
+            <form id="keamForm">
+                <!-- Hidden fields -->
+
+                <input type="hidden" name="board" value="nil">
+                <input type="hidden" name="phy" value="-1">
+                <input type="hidden" name="chem" value="-1">
+                <input type="hidden" name="math" value="-1">
 
                 <!-- Exam Date Selection -->
                 <div class="mb-4">
@@ -127,14 +138,6 @@
                         <div class="radio-container">
                             <input type="radio" id="23" name="examDate" value="23" checked>
                             <label for="23">23rd</label>
-                        </div>
-                        <div class="radio-container">
-                            <input type="radio" id="24FN" name="examDate" value="24FN">
-                            <label for="24FN">24th FN</label>
-                        </div>
-                        <div class="radio-container">
-                            <input type="radio" id="24AN" name="examDate" value="24AN">
-                            <label for="24AN">24th AN</label>
                         </div>
                         <div class="radio-container">
                             <input type="radio" id="25" name="examDate" value="25">
@@ -152,18 +155,28 @@
                             <input type="radio" id="28" name="examDate" value="28">
                             <label for="28">28th</label>
                         </div>
+                        <div class="radio-container">
+                            <input type="radio" id="29FN" name="examDate" value="29FN">
+                            <label for="29FN">29th</label>
+                        </div>
                     </div>
 
                     <div class="flex flex-wrap pharma-options">
                         <p class="w-full text-xs mb-1">B.Pharm Options:</p>
                         <div class="radio-container">
-                            <input type="radio" id="29FN" name="examDate" value="29FN">
-                            <label for="29FN">29th FN</label>
+                            <input type="radio" id="24FN" name="examDate" value="24FN">
+                            <label for="24FN">24th FN</label>
+                        </div>
+                        <div class="radio-container">
+                            <input type="radio" id="24AN" name="examDate" value="24AN">
+                            <label for="24AN">24th AN</label>
                         </div>
                         <div class="radio-container">
                             <input type="radio" id="29AN" name="examDate" value="29AN">
                             <label for="29AN">29th AN</label>
                         </div>
+
+
                     </div>
                 </div>
 
@@ -174,31 +187,6 @@
                         placeholder="Paste your response sheet here..."></textarea>
                 </div>
 
-                <!-- 12th Marks -->
-                <div class="mb-6">
-                    <label class="form-label block mb-2">12th Marks:</label>
-                    <div class="grid grid-cols-3 gap-4">
-                        <div>
-                            <label for="physics" class="block text-sm">Physics:</label>
-                            <input type="number" id="physics" name="phy" class="form-input w-full p-2" min="0" max="100"
-                                required>
-                        </div>
-                        <div>
-                            <label for="chemistry" class="block text-sm">Chemistry:</label>
-                            <input type="number" id="chemistry" name="chem" class="form-input w-full p-2" min="0"
-                                max="100" required>
-                        </div>
-                        <div>
-                            <label for="maths" class="block text-sm">Mathematics:</label>
-                            <input type="number" id="maths" name="math" class="form-input w-full p-2" min="0" max="100"
-                                required>
-                        </div>
-                    </div>
-
-                    <div class="mt-3 p-3 bg-gray-50 rounded-lg">
-                        <p class="text-sm">Total PCM: <span id="pcmTotal">0</span> / <span id="pcmMax">300</span></p>
-                    </div>
-                </div>
 
                 <!-- Submit Button -->
                 <div class="text-center">
@@ -257,46 +245,19 @@
             '29AN': 144
         };
 
-        // Handle board selection to update max marks
-        const boardRadios = document.querySelectorAll('input[name="board"]');
-        const marksInputs = document.querySelectorAll('#physics, #chemistry, #maths');
-        const pcmMaxSpan = document.getElementById('pcmMax');
-
-        boardRadios.forEach(radio => {
-            radio.addEventListener('change', updateMaxMarks);
-        });
-
-        function updateMaxMarks() {
-            const selectedBoard = document.querySelector('input[name="board"]:checked').value;
-            const maxMarks = (selectedBoard === 'state') ? 120 : 100;
-
-            marksInputs.forEach(input => {
-                input.max = maxMarks;
-            });
-
-            pcmMaxSpan.textContent = maxMarks * 3;
-            calculatePCMTotal();
-        }
-
-        // Calculate PCM total
-        marksInputs.forEach(input => {
-            input.addEventListener('input', calculatePCMTotal);
-        });
-
-        function calculatePCMTotal() {
-            const physics = parseInt(document.getElementById('physics').value) || 0;
-            const chemistry = parseInt(document.getElementById('chemistry').value) || 0;
-            const maths = parseInt(document.getElementById('maths').value) || 0;
-
-            const total = physics + chemistry + maths;
-            document.getElementById('pcmTotal').textContent = total;
-        }
-
         // Form submission
         document.getElementById('keamForm').addEventListener('submit', function (e) {
             e.preventDefault();
 
             const formData = new FormData(this);
+
+            formData.append("board", "nil")
+            formData.append("phy", "-1")
+            formData.append("chem", "-1")
+            formData.append("math", "-1")
+
+
+
             const examDate = formData.get('examDate');
 
             // Send data to server and process response
@@ -313,17 +274,10 @@
                 .then(data => {
                     // Process server response
                     const responses = data.responses || [];
-					const board = document.querySelector('input[name="board"]:checked').value;
-                    const physics = parseInt(document.getElementById('physics').value) || 0;
-                    const chemistry = parseInt(document.getElementById('chemistry').value) || 0;
-                    const maths = parseInt(document.getElementById('maths').value) || 0;
 
                     let student = {
                         correct: 0,
                         wrong: 0,
-                        phy: physics,
-                        chem: chemistry,
-                        math: maths,
                         responses: responses,
                         varlen: var_lens[examDate]
                     };
@@ -331,8 +285,7 @@
                     // Calculate scores
 
 
-                            
-                    const pcm = physics + chemistry + maths;
+
 
                     for (let i = 0; i < student.responses.length; i++) {
                         const [ans, student_ans] = student.responses[i];
@@ -346,7 +299,7 @@
                         }
                     }
 
-                    student.score = (((student.correct * 4) - student.wrong) / (student.varlen * 4)) * 300 + ( board === 'cbse' ? pcm : (pcm / 360) * 300);
+                    student.score = (((student.correct * 4) - student.wrong) / (student.varlen * 4)) * 300;
 
                     // Display results
                     document.getElementById('totalScore').textContent = student.score.toFixed(2);
