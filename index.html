@@ -411,7 +411,7 @@
             })
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok ' + response.statusText);
+                        throw new Error('Invalid request. If you`re using telegram website preview, switch to another browser for this to work. (' + response.statusText + ')');
                     }
                     return response.json();
                 })
@@ -456,7 +456,7 @@
                     document.getElementById('resultCard').scrollIntoView({ behavior: 'smooth' });
                 })
                 .catch(error => {
-                    alert('Error processing your submission: ' + error.message);
+                    alert('Error : ' + error.message);
                     console.error('Error:', error);
                 });
         });
