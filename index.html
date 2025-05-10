@@ -302,7 +302,7 @@
                     student.score = (((student.correct * 4) - student.wrong) / (student.varlen * 4)) * 300;
 
                     // Display results
-                    document.getElementById('totalScore').textContent = student.score.toFixed(2);
+                    document.getElementById('totalScore').textContent = student.score.toFixed(2) + "/300";
                     document.getElementById('correctAnswers').textContent = student.correct;
                     document.getElementById('wrongAnswers').textContent = student.wrong;
                     document.getElementById('notAttempted').textContent = student.varlen - (student.correct + student.wrong);
