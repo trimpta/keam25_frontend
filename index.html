@@ -113,7 +113,7 @@
             border: 1px solid #EF4444;
         }
 
-        .answer-not-attempted {
+        .answer-notattempted {
             background-color: #F3F4F6;
             border: 1px solid #D1D5DB;
         }
@@ -140,7 +140,7 @@
             color: white;
         }
 
-        .answer-not-attempted .answer-icon {
+        .answer-notattempted .answer-icon {
             background-color: #9CA3AF;
             color: white;
         }
@@ -169,7 +169,15 @@
             font-weight: 600;
         }
     </style>
-</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-CPJR0EH6B4"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-CPJR0EH6B4');
+</script></head>
 
 <body>
     <div class="container mx-auto px-4 py-8">
@@ -328,7 +336,7 @@
                     <div class="response-tab active" id="tab-all">All Questions</div>
                     <div class="response-tab" id="tab-correct">Correct</div>
                     <div class="response-tab" id="tab-wrong">Wrong</div>
-                    <div class="response-tab" id="tab-not-attempted">Not Attempted</div>
+                    <div class="response-tab" id="tab-notattempted">Not Attempted</div>
                 </div>
 
                 <div class="response-section">
@@ -467,7 +475,7 @@
                 let itemClass, icon, status, answerText;
 
                 if (userAnswer === "N") {
-                    itemClass = "answer-not-attempted";
+                    itemClass = "answer-notattempted";
                     icon = "-";
                     status = "Not attempted";
                     answerText = `Correct: ${correctAnswer}`;
@@ -485,7 +493,7 @@
 
                 const itemElement = document.createElement('div');
                 itemElement.className = `answer-item ${itemClass}`;
-                itemElement.dataset.status = status.toLowerCase().replace(' ', '-');
+                itemElement.setAttribute('data-type', itemClass.replace('answer-', ''));
 
                 itemElement.innerHTML = `
                     <div><strong>${questionNumber}:</strong> ${status}</div>
@@ -519,14 +527,13 @@
                     responseItems.forEach(item => {
                         if (tabId === 'all') {
                             item.style.display = 'block';
-                        } else if (tabId === 'correct' && item.classList.contains('answer-correct')) {
-                            item.style.display = 'block';
-                        } else if (tabId === 'wrong' && item.classList.contains('answer-wrong')) {
-                            item.style.display = 'block';
-                        } else if (tabId === 'not-attempted' && item.classList.contains('answer-not-attempted')) {
-                            item.style.display = 'block';
                         } else {
-                            item.style.display = 'none';
+                            const itemType = item.getAttribute('data-type');
+                            if (tabId === itemType) {
+                                item.style.display = 'block';
+                            } else {
+                                item.style.display = 'none';
+                            }
                         }
                     });
                 });
