@@ -215,7 +215,7 @@
 
             <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                 <h3 class="font-semibold text-red-800 mb-2">DISCLAIMER</h3>
-                <p class="text-sm mb-2">This predicted rank is based on previous year’s data and is meant for informational purposes only. It does not account for normalization, category reservations, tie-breaking rules, or changes in exam difficulty.</p><p class="text-sm mb-2">Your actual rank may differ significantly. Use this tool only as a rough estimate.</p><p class="text-sm mb-2">We use a Logistic regression model to estimate your rank</p>
+                <p class="text-sm mb-2">This predicted rank is based on previous year’s data and is meant for informational purposes only. It does not account for normalization, category reservations, tie-breaking rules, or changes in exam difficulty.</p><p class="text-sm mb-2">Your actual rank may differ significantly. Use this tool only as a rough estimate.</p><p class="text-sm mb-2">We use a Logistic regression model to estimate your rank</p><p class="text-sm font-bold mb-2">For CBSE/ICSE, +8 and for State, -25 is added to your calculated score while estimating rank</p>
             </div>
             
             <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
@@ -578,7 +578,7 @@
                     document.getElementById('wrongAnswers').textContent = student.wrong;
                     document.getElementById('notAttempted').textContent = student.varlen - (student.correct + student.wrong);
 
-                    displayPredictedRank(student.score, pcm)
+                    displayPredictedRank(student.score, board, pcm)
 
                     // Display detailed responses
                     displayDetailedResponses(student.responses, examDate);
@@ -595,8 +595,9 @@
         });
 
         //
-        function displayPredictedRank(score, pcm) {
-            const url = `https://nerdrip.pythonanywhere.com/rank?marks=${score}`;
+        function displayPredictedRank(score, board, pcm) {
+            let norm = (board === 'cbse' ? 8 : -25)
+            const url = `https://nerdrip.pythonanywhere.com/rank?marks=${score + norm}`;
 
             fetch(url)
                 .then(response => response.json())
@@ -609,7 +610,6 @@
                     document.getElementById('predictedRank').textContent = 'Could not fetch rank';
                 });
         }
-
 
         // Function to display detailed responses
         function displayDetailedResponses(responses, examDate) {
